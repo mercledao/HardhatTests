@@ -140,7 +140,7 @@ contract VerifyTypedSign {
                         keccak256(abi.encodePacked(attestClaim.requesterSign)),
                         attestClaim.issuer,
                         attestClaim.issueAt,
-                        encodedRewards
+                        keccak256(abi.encodePacked(encodedRewards))
                     )
                     : abi.encode(
                         keccak256(
