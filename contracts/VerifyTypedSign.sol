@@ -16,13 +16,13 @@ contract VerifyTypedSign {
         string description;
         string image;
         uint256 xp;
-        address receiver;
-        address requester;
+        address to;
+        address delegate;
         uint256 requestAt;
     }
     struct AttestClaim {
-        bytes requesterSign;
-        address issuer;
+        bytes delegateSign;
+        address from;
         uint256 issueAt;
         // is optional. empty array must still be passed here
         Reward[] miscClaims;
@@ -35,7 +35,7 @@ contract VerifyTypedSign {
     ) public pure returns (address, bool) {
         bytes32 digest = hashTypedDataV4(domain, claimRequest);
         address signer = ECDSA.recover(digest, sign);
-        return (signer, signer == claimRequest.requester);
+        return (signer, signer == claimRequest.delegate);
     }
 
     function hashTypedDataV4(
@@ -52,7 +52,7 @@ contract VerifyTypedSign {
                         keccak256(abi.encodePacked(domain.name)),
                         keccak256(abi.encodePacked(domain.version)),
                         5,
-                        address(0x1F3D07D8D1A15db366AE47B2A5542fc5870D1968)
+                        address(0xFF236D360d16707f22b22285Cb24900D62CaFD4F)
                     )
                 ),
                 _keccak256Reward(claimRequest)
@@ -66,7 +66,7 @@ contract VerifyTypedSign {
     ) public pure returns (address, bool) {
         bytes32 digest = hashTypedDataV4AttestedByMercle(domain, claimRequest);
         address signer = ECDSA.recover(digest, sign);
-        return (signer, signer == claimRequest.issuer);
+        return (signer, signer == claimRequest.from);
     }
 
     function hashTypedDataV4AttestedByMercle(
@@ -83,7 +83,7 @@ contract VerifyTypedSign {
                         keccak256(abi.encodePacked(domain.name)),
                         keccak256(abi.encodePacked(domain.version)),
                         5,
-                        address(0x1F3D07D8D1A15db366AE47B2A5542fc5870D1968)
+                        address(0xFF236D360d16707f22b22285Cb24900D62CaFD4F)
                     )
                 ),
                 _keccak256AttestClaim(claimRequest)
@@ -102,15 +102,15 @@ contract VerifyTypedSign {
                      * Make sure to match order of variables as in the types array used with ethers.js
                      */
                     keccak256(
-                        "Reward(bytes12 id,string name,string description,string image,uint256 xp,address receiver,address requester,uint256 requestAt)"
+                        "Reward(bytes12 id,string name,string description,string image,uint256 xp,address to,address delegate,uint256 requestAt)"
                     ),
                     reward.id,
                     keccak256(abi.encodePacked(reward.name)),
                     keccak256(abi.encodePacked(reward.description)),
                     keccak256(abi.encodePacked(reward.image)),
                     reward.xp,
-                    reward.receiver,
-                    reward.requester,
+                    reward.to,
+                    reward.delegate,
                     reward.requestAt
                 )
             );
@@ -135,19 +135,19 @@ contract VerifyTypedSign {
                          * Make sure to match order of variables as in the types array used with ethers.js
                          */
                         keccak256(
-                            "AttestClaim(bytes requesterSign,address issuer,uint256 issueAt,Reward[] miscClaims)Reward(bytes12 id,string name,string description,string image,uint256 xp,address receiver,address requester,uint256 requestAt)"
+                            "AttestClaim(bytes delegateSign,address from,uint256 issueAt,Reward[] miscClaims)Reward(bytes12 id,string name,string description,string image,uint256 xp,address to,address delegate,uint256 requestAt)"
                         ),
-                        keccak256(abi.encodePacked(attestClaim.requesterSign)),
-                        attestClaim.issuer,
+                        keccak256(abi.encodePacked(attestClaim.delegateSign)),
+                        attestClaim.from,
                         attestClaim.issueAt,
                         keccak256(abi.encodePacked(encodedRewards))
                     )
                     : abi.encode(
                         keccak256(
-                            "AttestClaim(bytes requesterSign,address issuer,uint256 issueAt)"
+                            "AttestClaim(bytes delegateSign,address from,uint256 issueAt)"
                         ),
-                        keccak256(abi.encodePacked(attestClaim.requesterSign)),
-                        attestClaim.issuer,
+                        keccak256(abi.encodePacked(attestClaim.delegateSign)),
+                        attestClaim.from,
                         attestClaim.issueAt
                     )
             );

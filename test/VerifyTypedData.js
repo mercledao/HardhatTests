@@ -1,4 +1,5 @@
 const { expect } = require("chai");
+
 const profileData = {
   name: "Nischit Pradhan",
   description: "I like to learn new things!",
@@ -17,122 +18,62 @@ const profileData = {
               name: "Claim Reward Vinyl Singles Track",
               version: "1",
               chainId: 5,
-              verifyingContract: "0x1F3D07D8D1A15db366AE47B2A5542fc5870D1968",
+              verifyingContract: "0xFF236D360d16707f22b22285Cb24900D62CaFD4F",
             },
             types: {
               Reward: [
-                {
-                  name: "id",
-                  type: "bytes12",
-                },
-                {
-                  name: "name",
-                  type: "string",
-                },
-                {
-                  name: "description",
-                  type: "string",
-                },
-                {
-                  name: "image",
-                  type: "string",
-                },
-                {
-                  name: "xp",
-                  type: "uint256",
-                },
-                {
-                  name: "receiver",
-                  type: "address",
-                },
-                {
-                  name: "requester",
-                  type: "address",
-                },
-                {
-                  name: "requestAt",
-                  type: "uint256",
-                },
+                { name: "id", type: "bytes12" },
+                { name: "name", type: "string" },
+                { name: "description", type: "string" },
+                { name: "image", type: "string" },
+                { name: "xp", type: "uint256" },
+                { name: "to", type: "address" },
+                { name: "delegate", type: "address" },
+                { name: "requestAt", type: "uint256" },
               ],
             },
             message: {
-              description: "Virtual Vinyl Singles Tracks from the 10 KOL, available on LGND Music",
               id: "0x63f72e8458a23ab13b0437ca",
-              image: "https://storage-daohook-staging.s3.amazonaws.com/community/zool/events/image+10.png",
               name: "Vinyl Singles Track",
-              receiver: "0xE52772e599b3fa747Af9595266b527A31611cebd",
-              requestAt: 1677152232,
-              requester: "0xE52772e599b3fa747Af9595266b527A31611cebd",
+              description: "Virtual Vinyl Singles Tracks from the 10 KOL, available on LGND Music",
+              image: "https://storage-daohook-staging.s3.amazonaws.com/community/zool/events/image+10.png",
               xp: 20,
+              to: "0xA0e44Be4C5fbA68D03C1295fE162B74DC6ec3053",
+              delegate: "0xA0e44Be4C5fbA68D03C1295fE162B74DC6ec3053",
+              requestAt: 1677500079,
             },
-            sign: "0x208beb955479706d17874f9a05c9f42ee496c1cf558808caf5d47f0a26160ad07e48e4f2ced50c2b22cb2af94090f5b86c5e0e55d1294dacd0e677f03ddea93c1b",
+            sign: "0x1fc613b1ea8cbd7322f6025f86bb7b140fcd4005c622cf844c956993ef4deee02fd3c6f7800040a6d16ebff5aa5f8518ab63429000a7ef4d50129daf460ea9641b",
           },
           attestedByMercle: {
             domain: {
               name: "Attest Claims",
               version: "1",
               chainId: 5,
-              verifyingContract: "0x1F3D07D8D1A15db366AE47B2A5542fc5870D1968",
+              verifyingContract: "0xFF236D360d16707f22b22285Cb24900D62CaFD4F",
             },
             types: {
               AttestClaim: [
-                {
-                  name: "requesterSign",
-                  type: "bytes",
-                },
-                {
-                  name: "issuer",
-                  type: "address",
-                },
-                {
-                  name: "issueAt",
-                  type: "uint256",
-                },
-                {
-                  name: "miscClaims",
-                  type: "Reward[]",
-                },
+                { name: "delegateSign", type: "bytes" },
+                { name: "from", type: "address" },
+                { name: "issueAt", type: "uint256" },
+                { name: "miscClaims", type: "Reward[]" },
               ],
               Reward: [
-                {
-                  name: "id",
-                  type: "bytes12",
-                },
-                {
-                  name: "name",
-                  type: "string",
-                },
-                {
-                  name: "description",
-                  type: "string",
-                },
-                {
-                  name: "image",
-                  type: "string",
-                },
-                {
-                  name: "xp",
-                  type: "uint256",
-                },
-                {
-                  name: "receiver",
-                  type: "address",
-                },
-                {
-                  name: "requester",
-                  type: "address",
-                },
-                {
-                  name: "requestAt",
-                  type: "uint256",
-                },
+                { name: "id", type: "bytes12" },
+                { name: "name", type: "string" },
+                { name: "description", type: "string" },
+                { name: "image", type: "string" },
+                { name: "xp", type: "uint256" },
+                { name: "to", type: "address" },
+                { name: "delegate", type: "address" },
+                { name: "requestAt", type: "uint256" },
               ],
             },
             message: {
-              requesterSign:
-                "0x208beb955479706d17874f9a05c9f42ee496c1cf558808caf5d47f0a26160ad07e48e4f2ced50c2b22cb2af94090f5b86c5e0e55d1294dacd0e677f03ddea93c1b",
-              issuer: "0xeCE207e717365d67f87e1aE5cAc715Cf60208e63",
-              issueAt: 1677245944,
+              delegateSign:
+                "0x1fc613b1ea8cbd7322f6025f86bb7b140fcd4005c622cf844c956993ef4deee02fd3c6f7800040a6d16ebff5aa5f8518ab63429000a7ef4d50129daf460ea9641b",
+              from: "0xeCE207e717365d67f87e1aE5cAc715Cf60208e63",
+              issueAt: 1677500085,
               miscClaims: [
                 {
                   id: "0x63f8b22ff6fac9595a07b919",
@@ -141,13 +82,13 @@ const profileData = {
                   image:
                     "https://storage-daohook-staging.s3.amazonaws.com/community/zool/events/Style%3DLong+curly.png",
                   xp: 10,
-                  receiver: "0xE52772e599b3fa747Af9595266b527A31611cebd",
-                  requester: "0xeCE207e717365d67f87e1aE5cAc715Cf60208e63",
-                  requestAt: 1677245944,
+                  to: "0xA0e44Be4C5fbA68D03C1295fE162B74DC6ec3053",
+                  delegate: "0xeCE207e717365d67f87e1aE5cAc715Cf60208e63",
+                  requestAt: 1677500084,
                 },
               ],
             },
-            sign: "0x1eb0a91e931c28a3c022b139a4e418d9f334286ad02531a1c4ccbb9bf69d3abd7843a94feeac7828ce5d94b2cd70052464b43d69eba0eed27cee6ab5a6be81a01c",
+            sign: "0xfe0b407c72a5e5cd12cf47c34f0e5edef431b9fcbb04cc28c4b94621c15936313b6d6138d7fffd9ff16ca8319ef92d4e50b10cb2b5ca893978bead1d45ea05d71b",
           },
         },
       },
@@ -173,31 +114,22 @@ const profileDataAttestedByMercleWithoutMiscClaim = {
               name: "Attest Claims",
               version: "1",
               chainId: 5,
-              verifyingContract: "0x1F3D07D8D1A15db366AE47B2A5542fc5870D1968",
+              verifyingContract: "0xFF236D360d16707f22b22285Cb24900D62CaFD4F",
             },
             types: {
               AttestClaim: [
-                {
-                  name: "requesterSign",
-                  type: "bytes",
-                },
-                {
-                  name: "issuer",
-                  type: "address",
-                },
-                {
-                  name: "issueAt",
-                  type: "uint256",
-                },
+                { name: "delegateSign", type: "bytes" },
+                { name: "from", type: "address" },
+                { name: "issueAt", type: "uint256" },
               ],
             },
             message: {
-              requesterSign:
-                "0x208beb955479706d17874f9a05c9f42ee496c1cf558808caf5d47f0a26160ad07e48e4f2ced50c2b22cb2af94090f5b86c5e0e55d1294dacd0e677f03ddea93c1b",
-              issuer: "0xeCE207e717365d67f87e1aE5cAc715Cf60208e63",
-              issueAt: 1677257162,
+              delegateSign:
+                "0xf13d691163306eec1a9d6e181a6143adcaddbd68cb0be42d49f9c0a5637283a44ee02adace2dd3d5ddf60029c241f2c85e4dc441cf9c66f49a09e137374ecbc61c",
+              from: "0xeCE207e717365d67f87e1aE5cAc715Cf60208e63",
+              issueAt: 1677499973,
             },
-            sign: "0x6950a774b6e90e20b33f1ac052476f6c5c07caec239139fe7e4cdd064cacea6a3256bba7ef8eec8278577f60035de8a6f5279f9b8bd55b0ccf15caba8cac78171c",
+            sign: "0x5a19f9a8711dcea58e5892b365a85d1e98697af7cba532eca857b3bc850b7f18465509d3c8ede44aaa52ede3758e4e99e6939acef235e79bd84ca01d4eda584d1b",
           },
         },
       },
@@ -211,9 +143,9 @@ describe("VerifyTypedSign contract", () => {
 
     const request = profileData.attributes[0].claims["0x63f72e8458a23ab13b0437ca"].request;
 
-    const requesterAddress = ethers.utils.verifyTypedData(request.domain, request.types, request.message, request.sign);
-    console.log("ethers verification", requesterAddress, request.message.requester);
-    expect(requesterAddress).to.equal(request.message.requester);
+    const delegateAddress = ethers.utils.verifyTypedData(request.domain, request.types, request.message, request.sign);
+    console.log("ethers verification", delegateAddress, request.message.delegate);
+    expect(delegateAddress).to.equal(request.message.delegate);
 
     const VerifyTypedSign = await ethers.getContractFactory("VerifyTypedSign");
     const verifyTypedSign = await VerifyTypedSign.deploy();
@@ -224,7 +156,7 @@ describe("VerifyTypedSign contract", () => {
       request.sign
     );
     console.log(vouchFrom, isVerified);
-    expect(vouchFrom).to.equal(request.message.requester);
+    expect(vouchFrom).to.equal(request.message.delegate);
     expect(isVerified).to.equal(true);
   });
 
@@ -235,8 +167,8 @@ describe("VerifyTypedSign contract", () => {
       profileDataAttestedByMercleWithoutMiscClaim.attributes[0].claims["0x63f72e8458a23ab13b0437ca"].attestedByMercle;
 
     const requesterAddress = ethers.utils.verifyTypedData(request.domain, request.types, request.message, request.sign);
-    console.log("ethers verification", requesterAddress, request.message.issuer);
-    expect(requesterAddress).to.equal(request.message.issuer);
+    console.log("ethers verification", requesterAddress, request.message.from);
+    expect(requesterAddress).to.equal(request.message.from);
 
     const VerifyTypedSign = await ethers.getContractFactory("VerifyTypedSign");
     const verifyTypedSign = await VerifyTypedSign.deploy();
@@ -247,7 +179,7 @@ describe("VerifyTypedSign contract", () => {
       request.sign
     );
     console.log(vouchFrom, isVerified);
-    expect(vouchFrom).to.equal(request.message.issuer);
+    expect(vouchFrom).to.equal(request.message.from);
     expect(isVerified).to.equal(true);
   });
 
@@ -257,8 +189,8 @@ describe("VerifyTypedSign contract", () => {
     const request = profileData.attributes[0].claims["0x63f72e8458a23ab13b0437ca"].attestedByMercle;
 
     const requesterAddress = ethers.utils.verifyTypedData(request.domain, request.types, request.message, request.sign);
-    console.log("ethers verification", requesterAddress, request.message.issuer);
-    expect(requesterAddress).to.equal(request.message.issuer);
+    console.log("ethers verification", requesterAddress, request.message.from);
+    expect(requesterAddress).to.equal(request.message.from);
 
     const VerifyTypedSign = await ethers.getContractFactory("VerifyTypedSign");
     const verifyTypedSign = await VerifyTypedSign.deploy();
@@ -269,7 +201,7 @@ describe("VerifyTypedSign contract", () => {
       request.sign
     );
     console.log(vouchFrom, isVerified);
-    expect(vouchFrom).to.equal(request.message.issuer);
+    expect(vouchFrom).to.equal(request.message.from);
     expect(isVerified).to.equal(true);
   });
 });
