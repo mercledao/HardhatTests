@@ -1,42 +1,35 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
 
-import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
-import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721URIStorageUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/utils/CountersUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/metatx/ERC2771ContextUpgradeable.sol";
+import "@openzeppelin/contracts/access/AccessControlEnumerable.sol";
+import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
+import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
+import "@openzeppelin/contracts/utils/Context.sol";
+import "@openzeppelin/contracts/metatx/ERC2771Context.sol";
 
 /**
  * One Time Mint ERC 721 allows users with minter role to add any individual to mint token once.
  * Normal minters can mint tokens as usual.
  * Minters can create campaigns for one time mint.
  */
-contract MembershipNFT is
-    Initializable,
-    ERC721Upgradeable,
-    ERC721URIStorageUpgradeable,
-    AccessControlUpgradeable,
-    UUPSUpgradeable,
-    ERC2771ContextUpgradeable
+contract MembershipNFTPlain is
+    ERC2771Context,
+    ERC721URIStorage,
+    AccessControlEnumerable
 {
-    bytes32 public constant UPGRADER_ROLE = keccak256("UPGRADER_ROLE");
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
-    bytes32 public constant CLAIM_ISSUER_ROLE = keccak256("CLAIM_ISSUER_ROLE");
 
     // to access campaign status
-    bytes32 private constant BYTE_ZERO = bytes32(uint256(0));
-    bytes32 private constant BYTE_ONE = bytes32(uint256(1));
+    bytes32 private BYTE_ZERO = bytes32(uint256(0));
+    bytes32 private BYTE_ONE = bytes32(uint256(1));
 
     // status for campaign mint state
-    address private constant EMPTY = address(0);
-    address private constant CAN_MINT = address(1);
-    address private constant DISABLED = address(2);
+    address private EMPTY = address(0);
+    address private CAN_MINT = address(1);
+    address private DISABLED = address(2);
 
     struct Campaign {
         bytes32 merkleRoot;
@@ -47,22 +40,15 @@ contract MembershipNFT is
     }
     mapping(bytes12 => Campaign) public campaigns;
 
-    using CountersUpgradeable for CountersUpgradeable.Counter;
-    CountersUpgradeable.Counter private _tokenIds;
+    using Counters for Counters.Counter;
+    Counters.Counter private _tokenIds;
 
     address public creator;
     string public description;
     bytes12 public communityId;
 
-    /// @custom:oz-upgrades-unsafe-allow constructor
-    constructor(address _trustedForwarder)
-        ERC2771ContextUpgradeable(_trustedForwarder)
-    {
-        _disableInitializers();
-    }
-
-    function initialize(
-        address mercleAddress,
+    constructor(
+        address _trustedForwarder,
         bytes12 _communityId,
         address _creator,
         string memory _name,
@@ -71,21 +57,13 @@ contract MembershipNFT is
         bytes12 campaignId, // optional, pass 0x0..
         bytes32 merkleRoot, // optional, pass 0x0..
         uint64 expireAt // optional, pass 0
-    ) public initializer {
-        __ERC721_init(_name, _symbol);
-        __ERC721URIStorage_init();
-        __AccessControl_init();
-        __UUPSUpgradeable_init();
+    ) ERC2771Context(_trustedForwarder) ERC721(_name, _symbol) {
+        _setupRole(DEFAULT_ADMIN_ROLE, _creator);
+        _setupRole(MINTER_ROLE, _creator);
 
-        _grantRole(DEFAULT_ADMIN_ROLE, _creator);
-        _grantRole(UPGRADER_ROLE, _creator);
-        _grantRole(MINTER_ROLE, _creator);
-        _grantRole(CLAIM_ISSUER_ROLE, _creator);
-        _grantRole(CLAIM_ISSUER_ROLE, mercleAddress);
-
+        communityId = _communityId;
         creator = _creator;
         description = _description;
-        communityId = _communityId;
 
         if (
             campaignId > bytes12(0) &&
@@ -224,20 +202,18 @@ contract MembershipNFT is
         return newItemId;
     }
 
-    function _burn(uint256 tokenId)
-        internal
-        override(ERC721Upgradeable, ERC721URIStorageUpgradeable)
-    {
-        super._burn(tokenId);
-    }
-
-    function tokenURI(uint256 tokenId)
+    function supportsInterface(bytes4 interfaceId)
         public
         view
-        override(ERC721Upgradeable, ERC721URIStorageUpgradeable)
-        returns (string memory)
+        virtual
+        override(ERC721, AccessControlEnumerable)
+        returns (bool)
     {
-        return super.tokenURI(tokenId);
+        return super.supportsInterface(interfaceId);
+    }
+
+    function _burn(uint256 tokenId) internal override {
+        super._burn(tokenId);
     }
 
     function _beforeTokenTransfer(
@@ -252,17 +228,11 @@ contract MembershipNFT is
         );
     }
 
-    function _authorizeUpgrade(address newImplementation)
-        internal
-        override
-        onlyRole(UPGRADER_ROLE)
-    {}
-
     function _msgSender()
         internal
         view
         virtual
-        override(ERC2771ContextUpgradeable, ContextUpgradeable)
+        override(ERC2771Context, Context)
         returns (address)
     {
         return super._msgSender();
@@ -272,18 +242,9 @@ contract MembershipNFT is
         internal
         view
         virtual
-        override(ERC2771ContextUpgradeable, ContextUpgradeable)
+        override(ERC2771Context, Context)
         returns (bytes calldata)
     {
         return super._msgData();
-    }
-
-    function supportsInterface(bytes4 interfaceId)
-        public
-        view
-        override(ERC721Upgradeable, AccessControlUpgradeable)
-        returns (bool)
-    {
-        return super.supportsInterface(interfaceId);
     }
 }

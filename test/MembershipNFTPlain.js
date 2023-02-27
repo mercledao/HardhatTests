@@ -4,8 +4,8 @@ describe("Test deployed contract", () => {
   it("should deploy NFT contract", async () => {
     const [owner] = await ethers.getSigners();
 
-    const MembershipNFT = await ethers.getContractFactory("MembershipNFT");
-    const membershipNFT = await MembershipNFT.deploy(
+    const MembershipNFTPlain = await ethers.getContractFactory("MembershipNFTPlain");
+    const membershipNFT = await MembershipNFTPlain.deploy(
       "0xE041608922d06a4F26C0d4c27d8bCD01daf1f792",
       "0x6314366bd52be1fb78274d6a",
       owner.address,
@@ -29,8 +29,8 @@ describe("Test mint contract", () => {
     const msghash = ethers.utils.solidityKeccak256(["bytes12"], ["0x63d7dbc61ed63f114d73f394"]);
     const sign = await wallet.signMessage(ethers.utils.arrayify(msghash));
 
-    const MembershipNFT = await ethers.getContractFactory("MembershipNFT");
-    const membershipNFT = await MembershipNFT.deploy(
+    const MembershipNFTPlain = await ethers.getContractFactory("MembershipNFTPlain");
+    const membershipNFT = await MembershipNFTPlain.deploy(
       "0xE041608922d06a4F26C0d4c27d8bCD01daf1f792",
       "0x6314366bd52be1fb78274d6a",
       owner.address,
