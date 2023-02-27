@@ -1,11 +1,16 @@
 require("@nomicfoundation/hardhat-toolbox");
 require("@openzeppelin/hardhat-upgrades");
+require("hardhat-contract-sizer");
+
 const path = require("path");
 require("dotenv").config({ path: path.join(__dirname, "/.env") });
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
   solidity: {
     version: "0.8.17",
+    settings: {
+      optimizer: { enabled: true, runs: 200 },
+    },
   },
   networks: {
     goerli: {
