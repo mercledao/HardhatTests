@@ -43,4 +43,22 @@ const testDeployedContract = async (address) => {
   return { vouchFrom, isVerified, isVouchFromSame: vouchFrom == vouch.vouchFrom, isVerifiedTrue: isVerified == true };
 };
 
-module.exports = { main, deployContract, testDeployedContract };
+const deployMembershipNFTFactory = async () => {
+  const chainId = 5;
+  const biconomyForwarders = {
+    1: "0x84a0856b038eaAd1cC7E297cF34A7e72685A8693",
+    5: "0xE041608922d06a4F26C0d4c27d8bCD01daf1f792",
+    100: "0x86C80a8aa58e0A4fa09A69624c31Ab2a6CAD56b8",
+    137: "0x86C80a8aa58e0A4fa09A69624c31Ab2a6CAD56b8",
+  };
+  const MembershipNFTFactory = await hre.ethers.getContractFactory("MembershipNFTFactory");
+  const membershipNFTFactory = await MembershipNFTFactory.deploy(
+    process.env.MERCLE_WALLET_ADDRESS,
+    biconomyForwarders[chainId]
+  );
+
+  console.log(`MembershipNFTFactory deployed to ${membershipNFTFactory.address}`);
+  return { address: membershipNFTFactory.address };
+};
+
+module.exports = { deployMembershipNFTFactory, main, deployContract, testDeployedContract };
