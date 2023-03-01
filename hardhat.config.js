@@ -14,7 +14,6 @@ module.exports = {
       optimizer: { enabled: true, runs: 200 },
     },
   },
-  abiExporter: { path: "./abis", clear: true, flat: true },
   networks: {
     goerli: {
       url: "https://eth-goerli.alchemyapi.io/v2/vma47TKOLkZ-xH_XQh1tQFfLADEJiHQt",
@@ -30,6 +29,7 @@ module.exports = {
       chainId: 137,
     },
   },
+  abiExporter: { path: "./abis", clear: true, flat: true, only:["MembershipNFT$","MembershipNFTFactory$"] },
   etherscan: {
     // Your API key for Etherscan
     // Obtain one at https://etherscan.io/
