@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
-//       _____                       .__          
-//      /     \   ___________   ____ |  |   ____  
-//     /  \ /  \_/ __ \_  __ \_/ ___\|  | _/ __ \ 
-//    /    Y    \  ___/|  | \/\  \___|  |_\  ___/ 
+//       _____                       .__
+//      /     \   ___________   ____ |  |   ____
+//     /  \ /  \_/ __ \_  __ \_/ ___\|  | _/ __ \
+//    /    Y    \  ___/|  | \/\  \___|  |_\  ___/
 //    \____|__  /\___  >__|    \___  >____/\___  >
-//        \/     \/            \/          \/ 
+//        \/     \/            \/          \/
 
 pragma solidity ^0.8.9;
 
@@ -24,7 +24,7 @@ import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
  * Normal minters can mint tokens as usual.
  * Minters can create campaigns for one time mint.
  */
-contract MembershipNFT is
+contract MembershipNFTUpgraded is
     Initializable,
     ERC721Upgradeable,
     ERC721URIStorageUpgradeable,
@@ -84,13 +84,11 @@ contract MembershipNFT is
         __AccessControl_init();
         __UUPSUpgradeable_init();
 
-        _setupRole(DEFAULT_ADMIN_ROLE, _creator);
-        _setupRole(UPGRADER_ROLE, _creator);
-        _setupRole(MINTER_ROLE, _creator);
-        // allow factory contract to initialize campaign
-        _setupRole(MINTER_ROLE, msg.sender);
-        _setupRole(CLAIM_ISSUER_ROLE, _creator);
-        _setupRole(CLAIM_ISSUER_ROLE, mercleAddress);
+        _grantRole(DEFAULT_ADMIN_ROLE, _creator);
+        _grantRole(UPGRADER_ROLE, _creator);
+        _grantRole(MINTER_ROLE, _creator);
+        _grantRole(CLAIM_ISSUER_ROLE, _creator);
+        _grantRole(CLAIM_ISSUER_ROLE, mercleAddress);
 
         creator = _creator;
         description = _description;
@@ -119,6 +117,10 @@ contract MembershipNFT is
             "DOES_NOT_HAVE_MINTER_ROLE"
         );
         return _mintNFT(recipient, tokenUri);
+    }
+
+    function newFunction() public pure returns (string memory) {
+        return "this is a new function";
     }
 
     function mintNFTCampaign(

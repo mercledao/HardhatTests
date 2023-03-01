@@ -17,9 +17,13 @@ contract MembershipNFTFactory {
 
     function deployContract(
         address _creator,
+        bytes12 _communityId,
         string memory _name,
         string memory _symbol,
-        string memory _description
+        string memory _description,
+        bytes12 campaignId, // optional, pass 0x0..
+        bytes32 merkleRoot, // optional, pass 0x0..
+        uint64 expireAt // optional, pass 0
     ) public returns (address) {
         // address tokenImplementation = address(new UpgradableNFT());
         address proxyAddress = address(
@@ -27,10 +31,15 @@ contract MembershipNFTFactory {
                 tokenImplementation,
                 abi.encodeWithSelector(
                     MembershipNFT(address(0)).initialize.selector,
+                    mercleAddress,
                     _creator,
+                    _communityId,
                     _name,
                     _symbol,
-                    _description
+                    _description,
+                    campaignId,
+                    merkleRoot,
+                    expireAt
                 )
             )
         );
