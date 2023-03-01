@@ -28,8 +28,11 @@ module.exports = {
       url: "https://rpc-mainnet.maticvigil.com/v1/7946c991b3854b139ba413743294e925ca078af5",
       chainId: 137,
     },
+    hardhat: {
+      chainId: 1337,
+    },
   },
-  abiExporter: { path: "./abis", clear: true, flat: true, only:["MembershipNFT$","MembershipNFTFactory$"] },
+  abiExporter: { path: "./abis", clear: true, flat: true, only: ["MembershipNFT$", "MembershipNFTFactory$"] },
   etherscan: {
     // Your API key for Etherscan
     // Obtain one at https://etherscan.io/

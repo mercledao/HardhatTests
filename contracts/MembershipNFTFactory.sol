@@ -5,13 +5,13 @@ import "./MembershipNFT.sol";
 import "@openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.sol";
 
 contract MembershipNFTFactory {
-    address public immutable mercleAddress;
+    address public immutable claimIssuer;
     address public immutable tokenImplementation;
 
     address[] public nftsProxies;
 
-    constructor(address _mercleAddress, address _trustedForwarder) {
-        mercleAddress = _mercleAddress;
+    constructor(address _claimIssuer, address _trustedForwarder) {
+        claimIssuer = _claimIssuer;
         tokenImplementation = address(new MembershipNFT(_trustedForwarder));
     }
 
@@ -31,7 +31,7 @@ contract MembershipNFTFactory {
                 tokenImplementation,
                 abi.encodeWithSelector(
                     MembershipNFT(address(0)).initialize.selector,
-                    mercleAddress,
+                    claimIssuer,
                     _creator,
                     _communityId,
                     _name,

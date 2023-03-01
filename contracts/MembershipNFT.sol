@@ -69,7 +69,7 @@ contract MembershipNFT is
     }
 
     function initialize(
-        address mercleAddress,
+        address claimIssuer,
         address _creator,
         bytes12 _communityId,
         string memory _name,
@@ -90,7 +90,7 @@ contract MembershipNFT is
         // allow factory contract to initialize campaign
         _setupRole(MINTER_ROLE, msg.sender);
         _setupRole(CLAIM_ISSUER_ROLE, _creator);
-        _setupRole(CLAIM_ISSUER_ROLE, mercleAddress);
+        _setupRole(CLAIM_ISSUER_ROLE, claimIssuer);
 
         creator = _creator;
         description = _description;
