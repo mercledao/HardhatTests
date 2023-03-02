@@ -12,5 +12,5 @@ npx hardhat node
 npx hardhat run scripts/deploy.js
 npx hardhat compile --force
 npx hardhat export-abi
-npx hardhat verify --network goerli  0x7DADd6E485C96F9491d3B4a888aa0620E33ddd48 --constructor-args scripts/verifier/MembershipNFTFactoryVerifierArgs.js
+npx hardhat verify --network goerli  0xbBb8fEFe0E02C44A3E286BBA34c33ad4827f8459 --constructor-args scripts/verifier/MembershipNFTFactoryVerifierArgs.js
 ```

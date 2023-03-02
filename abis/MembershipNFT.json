@@ -522,7 +522,7 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "mercleAddress",
+        "name": "claimIssuer",
         "type": "address"
       },
       {
@@ -564,6 +564,16 @@
         "internalType": "uint64",
         "name": "expireAt",
         "type": "uint64"
+      },
+      {
+        "internalType": "bool",
+        "name": "_isOpenMint",
+        "type": "bool"
+      },
+      {
+        "internalType": "bool",
+        "name": "_isTradable",
+        "type": "bool"
       }
     ],
     "name": "initialize",
@@ -604,6 +614,32 @@
       }
     ],
     "name": "isCampaignActive",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "isOpenMint",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "isTradable",
     "outputs": [
       {
         "internalType": "bool",
@@ -842,6 +878,32 @@
       }
     ],
     "name": "setApprovalForAll",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bool",
+        "name": "_isOpenMint",
+        "type": "bool"
+      }
+    ],
+    "name": "setIsOpenMint",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bool",
+        "name": "_isTradable",
+        "type": "bool"
+      }
+    ],
+    "name": "setIsTradable",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
