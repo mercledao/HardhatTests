@@ -353,4 +353,39 @@ describe("Test MembershipNFT", () => {
     expect(await membershipNft.balanceOf(owner.address)).eq(0);
     expect(await membershipNft.balanceOf(owner2.address)).eq(1);
   });
+
+  it("setIsOpenMing and setIsTradable with constructor", async () => {
+    const [owner, owner2, owner3] = await ethers.getSigners();
+    const MembershipNFTFactory = await ethers.getContractFactory("MembershipNFTFactory");
+    const nftFactory = await MembershipNFTFactory.deploy(mercleAddress, forwarderAddress);
+    await nftFactory
+      .connect(owner)
+      .deployContract(
+        owner.address,
+        "0x6314366bd52be1fb78274d6a",
+        "Mercle Test",
+        "MERCLE",
+        "Mercle NFT Token",
+        "0x000000000000000000000000",
+        "0x0000000000000000000000000000000000000000000000000000000000000000",
+        0,
+        true,
+        true
+      );
+
+    const membershipNft = await upgrades.forceImport(
+      await nftFactory.getNft(0),
+      await ethers.getContractFactory("MembershipNFT"),
+      {
+        constructorArgs: [forwarderAddress],
+        kind: "uups",
+      }
+    );
+    await membershipNft.connect(owner2).mintNFT(owner2.address, "https://zool.timesnap.xyz");
+    expect(await membershipNft.balanceOf(owner2.address)).eq(1);
+
+    await membershipNft.connect(owner2).transferFrom(owner2.address, owner3.address, 1);
+    expect(await membershipNft.balanceOf(owner2.address)).eq(0);
+    expect(await membershipNft.balanceOf(owner3.address)).eq(1);
+  });
 });
