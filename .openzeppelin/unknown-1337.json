@@ -22,6 +22,22 @@
       "kind": "uups"
     },
     {
+      "address": "0xE451980132E65465d0a498c53f0b5227326Dd73F",
+      "kind": "uups"
+    },
+    {
+      "address": "0x5392A33F7F677f59e833FEBF4016cDDD88fF9E67",
+      "kind": "uups"
+    },
+    {
+      "address": "0xe082b26cEf079a095147F35c9647eC97c2401B83",
+      "kind": "uups"
+    },
+    {
+      "address": "0xf41B47c54dEFF12f8fE830A411a09D865eBb120E",
+      "kind": "uups"
+    },
+    {
       "address": "0xB7A5bd0345EF1Cc5E66bf61BdeC17D2461fBd968",
       "kind": "uups"
     },
@@ -47,7 +63,7 @@
     }
   ],
   "impls": {
-    "0801a4810c57186d48c2131f8a7a03ae5bf91807db2a18d3c089be2af8c11b29": {
+    "5623289a21a5ef6188553d0827583eb05dbbf0a0b426ffd5f4acc41d0dddf5f1": {
       "address": "0xa16E02E87b7454126E5E10d957A927A7F5B5d2be",
       "layout": {
         "solcVersion": "0.8.17",
@@ -395,9 +411,9 @@
         "0x9bd03768a7DCc129555dE410FF8E85528A4F88b5"
       ]
     },
-    "be6985b764e672e360b5e61427640138b67e7a82cde42a0b0a8d9f6fb9930084": {
+    "f2c718b9ce3761dbc267ddd61bb39e7d55b283a5a41254491d2b71678704f0e1": {
       "address": "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0",
-      "txHash": "0xc0c03a9eb11cbd34e3f3e553c68ac52b7c85b09a92f57752ff164e425e254472",
+      "txHash": "0x814e34312d6c1e0cad7da88f754466786efe9e461097c727852b9beb5e5d8f18",
       "layout": {
         "solcVersion": "0.8.17",
         "storage": [
@@ -558,7 +574,7 @@
             "label": "campaigns",
             "offset": 0,
             "slot": "402",
-            "type": "t_mapping(t_bytes12,t_struct(Campaign)7728_storage)",
+            "type": "t_mapping(t_bytes12,t_struct(Campaign)7742_storage)",
             "contract": "MembershipNFTUpgraded",
             "src": "contracts/MembershipNFTUpgraded.sol:58"
           },
@@ -644,7 +660,7 @@
             "label": "mapping(address => uint256)",
             "numberOfBytes": "32"
           },
-          "t_mapping(t_bytes12,t_struct(Campaign)7728_storage)": {
+          "t_mapping(t_bytes12,t_struct(Campaign)7742_storage)": {
             "label": "mapping(bytes12 => struct MembershipNFTUpgraded.Campaign)",
             "numberOfBytes": "32"
           },
@@ -668,7 +684,7 @@
             "label": "string",
             "numberOfBytes": "32"
           },
-          "t_struct(Campaign)7728_storage": {
+          "t_struct(Campaign)7742_storage": {
             "label": "struct MembershipNFTUpgraded.Campaign",
             "members": [
               {

@@ -78,7 +78,9 @@ contract MembershipNFT is
         string memory _description,
         bytes12 campaignId, // optional, pass 0x0..
         bytes32 merkleRoot, // optional, pass 0x0..
-        uint64 expireAt // optional, pass 0
+        uint64 expireAt, // optional, pass 0
+        bool _isOpenMint,
+        bool _isTradable
     ) public initializer {
         __ERC721_init(_name, _symbol);
         __ERC721URIStorage_init();
@@ -92,8 +94,9 @@ contract MembershipNFT is
         _setupRole(MINTER_ROLE, msg.sender);
         _setupRole(CLAIM_ISSUER_ROLE, _creator);
         _setupRole(CLAIM_ISSUER_ROLE, claimIssuer);
-        isTradable = false;
-        isOpenMint = false;
+
+        isOpenMint = _isOpenMint || false;
+        isTradable = _isTradable || false;
 
         creator = _creator;
         description = _description;

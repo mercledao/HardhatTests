@@ -20,7 +20,9 @@ describe("Test MembershipNFTFactory", () => {
       "My upgradable awesome test NFT",
       "0x63c5071b57273ebfcd1c0a44",
       "0xfa291557a4b526785c28677a4a5f0921d2c66a5dce9e2049b03a367cfaf26b74",
-      1891584796
+      1891584796,
+      false,
+      false
     );
 
     // contract was deployed from outside so need to import it to hardhat
@@ -71,7 +73,9 @@ describe("Test MembershipNFTFactory", () => {
         "Mercle NFT Token",
         "0x63c5071b57273ebfcd1c0a44",
         "0xfa291557a4b526785c28677a4a5f0921d2c66a5dce9e2049b03a367cfaf26b74",
-        1891584796
+        1891584796,
+        false,
+        false
       );
     await nftFactory
       .connect(owner2)
@@ -83,7 +87,9 @@ describe("Test MembershipNFTFactory", () => {
         "LIFI Test Token",
         "0x63c5071b57273ebfcd1c0a44",
         "0xfa291557a4b526785c28677a4a5f0921d2c66a5dce9e2049b03a367cfaf26b74",
-        1891584796
+        1891584796,
+        false,
+        false
       );
 
     const mercleNft = await ethers.getContractAt("MembershipNFT", await nftFactory.getNft(0));
@@ -130,7 +136,9 @@ describe("Test MembershipNFTFactory", () => {
         "Mercle NFT Token",
         "0x63c5071b57273ebfcd1c0a44",
         "0xfa291557a4b526785c28677a4a5f0921d2c66a5dce9e2049b03a367cfaf26b74",
-        1891584796
+        1891584796,
+        false,
+        false
       );
     await nftFactory
       .connect(owner2)
@@ -142,7 +150,9 @@ describe("Test MembershipNFTFactory", () => {
         "LIFI Test Token",
         "0x63c5071b57273ebfcd1c0a44",
         "0xfa291557a4b526785c28677a4a5f0921d2c66a5dce9e2049b03a367cfaf26b74",
-        1891584796
+        1891584796,
+        false,
+        false
       );
 
     const mercleNft = await upgrades.forceImport(
@@ -199,7 +209,9 @@ describe("Test MembershipNFT", () => {
         "Mercle NFT Token",
         "0x63d7dbc61ed63f114d73f394",
         "0xf1b85dede07df57f974a35212b9b5df15ef63349b4628ab7317a3d23867b7758",
-        1706626887
+        1706626887,
+        false,
+        false
       );
 
     const wallet = new ethers.Wallet("0x902421e6626c0c1b7cae8fd7f032e1f44a8ad3f8f22e4858e0a6eade75fdfc96");
@@ -254,7 +266,9 @@ describe("Test MembershipNFT", () => {
         "Mercle NFT Token",
         "0x000000000000000000000000",
         "0x0000000000000000000000000000000000000000000000000000000000000000",
-        0
+        0,
+        false,
+        false
       );
 
     const membershipNft = await upgrades.forceImport(
@@ -302,7 +316,9 @@ describe("Test MembershipNFT", () => {
         "Mercle NFT Token",
         "0x000000000000000000000000",
         "0x0000000000000000000000000000000000000000000000000000000000000000",
-        0
+        0,
+        false,
+        false
       );
 
     const membershipNft = await upgrades.forceImport(

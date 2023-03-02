@@ -23,7 +23,9 @@ contract MembershipNFTFactory {
         string memory _description,
         bytes12 campaignId, // optional, pass 0x0..
         bytes32 merkleRoot, // optional, pass 0x0..
-        uint64 expireAt // optional, pass 0
+        uint64 expireAt, // optional, pass 0
+        bool _isOpenMint,
+        bool _isTradable
     ) public returns (address) {
         // address tokenImplementation = address(new UpgradableNFT());
         address proxyAddress = address(
@@ -39,7 +41,9 @@ contract MembershipNFTFactory {
                     _description,
                     campaignId,
                     merkleRoot,
-                    expireAt
+                    expireAt,
+                    _isOpenMint,
+                    _isTradable
                 )
             )
         );
