@@ -10,7 +10,7 @@ describe("Test MembershipNFTFactory", () => {
     const MembershipNFTFactory = await ethers.getContractFactory("MembershipNFTFactory");
     const nftFactory = await MembershipNFTFactory.deploy(mercleAddress, forwarderAddress);
 
-    expect(await nftFactory.mercleAddress()).equal(mercleAddress);
+    expect(await nftFactory.claimIssuer()).equal(mercleAddress);
 
     await nftFactory.deployContract(
       owner.address,
@@ -181,5 +181,160 @@ describe("Test MembershipNFTFactory", () => {
     await upgrades.upgradeProxy(lifiNft.address, UpgradedNFT.connect(owner2), {
       constructorArgs: [forwarderAddress],
     });
+  });
+});
+
+describe("Test MembershipNFT", () => {
+  it("cannot mint campaign twice with same proof", async () => {
+    const [owner, owner2] = await ethers.getSigners();
+    const MembershipNFTFactory = await ethers.getContractFactory("MembershipNFTFactory");
+    const nftFactory = await MembershipNFTFactory.deploy(mercleAddress, forwarderAddress);
+    await nftFactory
+      .connect(owner)
+      .deployContract(
+        owner.address,
+        "0x6314366bd52be1fb78274d6a",
+        "Mercle Test",
+        "MERCLE",
+        "Mercle NFT Token",
+        "0x63d7dbc61ed63f114d73f394",
+        "0xf1b85dede07df57f974a35212b9b5df15ef63349b4628ab7317a3d23867b7758",
+        1706626887
+      );
+
+    const wallet = new ethers.Wallet("0x902421e6626c0c1b7cae8fd7f032e1f44a8ad3f8f22e4858e0a6eade75fdfc96");
+    const msghash = ethers.utils.solidityKeccak256(["bytes12"], ["0x63d7dbc61ed63f114d73f394"]);
+    const sign = await wallet.signMessage(ethers.utils.arrayify(msghash));
+
+    const membershipNft = await upgrades.forceImport(
+      await nftFactory.getNft(0),
+      await ethers.getContractFactory("MembershipNFT"),
+      {
+        constructorArgs: [forwarderAddress],
+        kind: "uups",
+      }
+    );
+
+    await membershipNft
+      .connect(owner2)
+      .mintNFTCampaign(
+        "0x63d7dbc61ed63f114d73f394",
+        ["0x396204952bad5e9752b7dc95f950dde89efc2320efc29c3a2cf9fd622494e285"],
+        sign,
+        owner.address,
+        "http://zool.timesnap.xyz"
+      );
+
+    try {
+      await membershipNft
+        .connect(owner2)
+        .mintNFTCampaign(
+          "0x63d7dbc61ed63f114d73f394",
+          ["0x396204952bad5e9752b7dc95f950dde89efc2320efc29c3a2cf9fd622494e285"],
+          sign,
+          owner.address,
+          "http://zool.timesnap.xyz"
+        );
+      expect(false).to.equal(true);
+    } catch (e) {
+      expect("cannot mint").to.equal("cannot mint");
+    }
+  });
+  it("setIsOpenMint should allow anybody to mint but it can only be set by admin", async () => {
+    const [owner, owner2] = await ethers.getSigners();
+    const MembershipNFTFactory = await ethers.getContractFactory("MembershipNFTFactory");
+    const nftFactory = await MembershipNFTFactory.deploy(mercleAddress, forwarderAddress);
+    await nftFactory
+      .connect(owner)
+      .deployContract(
+        owner.address,
+        "0x6314366bd52be1fb78274d6a",
+        "Mercle Test",
+        "MERCLE",
+        "Mercle NFT Token",
+        "0x000000000000000000000000",
+        "0x0000000000000000000000000000000000000000000000000000000000000000",
+        0
+      );
+
+    const membershipNft = await upgrades.forceImport(
+      await nftFactory.getNft(0),
+      await ethers.getContractFactory("MembershipNFT"),
+      {
+        constructorArgs: [forwarderAddress],
+        kind: "uups",
+      }
+    );
+    try {
+      await membershipNft.connect(owner2).mintNFT(owner2.address, "https://zool.timesnap.xyz");
+      expect(false).equals(true);
+    } catch (e) {
+      expect(e.message.indexOf("DOES_NOT_HAVE_MINTER_ROLE") > -1).equals(true);
+    }
+
+    // test only admin can change isOpenMint state
+    expect(await membershipNft.isOpenMint()).equals(false);
+    try {
+      await membershipNft.connect(owner2).setIsOpenMint(true);
+      expect(false).equals(true);
+    } catch (e) {
+      expect(e.message.indexOf("NOT_AUTHORIZED") > -1).equals(true);
+    }
+    await membershipNft.connect(owner).setIsOpenMint(true);
+    expect(await membershipNft.isOpenMint()).equals(true);
+
+    // test anybody can mint
+    await membershipNft.connect(owner2).mintNFT(owner2.address, "https://zool.timesnap.xyz");
+    expect(await membershipNft.balanceOf(owner2.address)).equals(1);
+  });
+
+  it("setIsTradable should allow transfer of tokens it can only be set by admin", async () => {
+    const [owner, owner2] = await ethers.getSigners();
+    const MembershipNFTFactory = await ethers.getContractFactory("MembershipNFTFactory");
+    const nftFactory = await MembershipNFTFactory.deploy(mercleAddress, forwarderAddress);
+    await nftFactory
+      .connect(owner)
+      .deployContract(
+        owner.address,
+        "0x6314366bd52be1fb78274d6a",
+        "Mercle Test",
+        "MERCLE",
+        "Mercle NFT Token",
+        "0x000000000000000000000000",
+        "0x0000000000000000000000000000000000000000000000000000000000000000",
+        0
+      );
+
+    const membershipNft = await upgrades.forceImport(
+      await nftFactory.getNft(0),
+      await ethers.getContractFactory("MembershipNFT"),
+      {
+        constructorArgs: [forwarderAddress],
+        kind: "uups",
+      }
+    );
+    await membershipNft.connect(owner).mintNFT(owner.address, "https://zool.timesnap.xyz");
+
+    try {
+      await membershipNft.connect(owner).transferFrom(owner.address, owner2.address, 1);
+      expect(false).equals(true);
+    } catch (e) {
+      expect(e.message.indexOf("This a Soulbound token") > -1).equals(true);
+    }
+
+    // test only admin can change isOpenMint state
+    expect(await membershipNft.isOpenMint()).equals(false);
+    try {
+      await membershipNft.connect(owner2).setIsTradable(true);
+      expect(false).equals(true);
+    } catch (e) {
+      expect(e.message.indexOf("NOT_AUTHORIZED") > -1).equals(true);
+    }
+    await membershipNft.connect(owner).setIsTradable(true);
+    expect(await membershipNft.isTradable()).equals(true);
+
+    await membershipNft.connect(owner).transferFrom(owner.address, owner2.address, 1);
+    expect(await membershipNft.balanceOf(owner.address)).eq(0);
+    expect(await membershipNft.balanceOf(owner2.address)).eq(1);
   });
 });

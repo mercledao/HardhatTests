@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
-//       _____                       .__          
-//      /     \   ___________   ____ |  |   ____  
-//     /  \ /  \_/ __ \_  __ \_/ ___\|  | _/ __ \ 
-//    /    Y    \  ___/|  | \/\  \___|  |_\  ___/ 
+//       _____                       .__
+//      /     \   ___________   ____ |  |   ____
+//     /  \ /  \_/ __ \_  __ \_/ ___\|  | _/ __ \
+//    /    Y    \  ___/|  | \/\  \___|  |_\  ___/
 //    \____|__  /\___  >__|    \___  >____/\___  >
-//        \/     \/            \/          \/ 
+//        \/     \/            \/          \/
 
 pragma solidity ^0.8.9;
 
@@ -45,6 +45,9 @@ contract MembershipNFT is
     address private constant CAN_MINT = address(1);
     address private constant DISABLED = address(2);
 
+    using CountersUpgradeable for CountersUpgradeable.Counter;
+    CountersUpgradeable.Counter private _tokenIds;
+
     struct Campaign {
         bytes32 merkleRoot;
         uint64 expireAt;
@@ -53,13 +56,11 @@ contract MembershipNFT is
         mapping(bytes32 => address) mintState;
     }
     mapping(bytes12 => Campaign) public campaigns;
-
-    using CountersUpgradeable for CountersUpgradeable.Counter;
-    CountersUpgradeable.Counter private _tokenIds;
-
     address public creator;
     string public description;
     bytes12 public communityId;
+    bool public isTradable;
+    bool public isOpenMint;
 
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor(address _trustedForwarder)
@@ -91,6 +92,8 @@ contract MembershipNFT is
         _setupRole(MINTER_ROLE, msg.sender);
         _setupRole(CLAIM_ISSUER_ROLE, _creator);
         _setupRole(CLAIM_ISSUER_ROLE, claimIssuer);
+        isTradable = false;
+        isOpenMint = false;
 
         creator = _creator;
         description = _description;
@@ -115,7 +118,7 @@ contract MembershipNFT is
         returns (uint256)
     {
         require(
-            hasRole(MINTER_ROLE, _msgSender()),
+            isOpenMint || hasRole(MINTER_ROLE, _msgSender()),
             "DOES_NOT_HAVE_MINTER_ROLE"
         );
         return _mintNFT(recipient, tokenUri);
@@ -249,6 +252,16 @@ contract MembershipNFT is
         return super.tokenURI(tokenId);
     }
 
+    function setIsOpenMint(bool _isOpenMint) public {
+        require(hasRole(DEFAULT_ADMIN_ROLE, _msgSender()), "NOT_AUTHORIZED");
+        isOpenMint = _isOpenMint;
+    }
+
+    function setIsTradable(bool _isTradable) public {
+        require(hasRole(DEFAULT_ADMIN_ROLE, _msgSender()), "NOT_AUTHORIZED");
+        isTradable = _isTradable;
+    }
+
     function _beforeTokenTransfer(
         address from,
         address to,
@@ -256,7 +269,7 @@ contract MembershipNFT is
         uint256
     ) internal virtual override {
         require(
-            from == address(0) || to == address(0),
+            isTradable || (from == address(0) || to == address(0)),
             "This a Soulbound token. It cannot be transferred. It can only be burned by the token owner."
         );
     }

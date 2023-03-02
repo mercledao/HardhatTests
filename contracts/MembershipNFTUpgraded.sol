@@ -45,6 +45,9 @@ contract MembershipNFTUpgraded is
     address private constant CAN_MINT = address(1);
     address private constant DISABLED = address(2);
 
+    using CountersUpgradeable for CountersUpgradeable.Counter;
+    CountersUpgradeable.Counter private _tokenIds;
+
     struct Campaign {
         bytes32 merkleRoot;
         uint64 expireAt;
@@ -53,13 +56,11 @@ contract MembershipNFTUpgraded is
         mapping(bytes32 => address) mintState;
     }
     mapping(bytes12 => Campaign) public campaigns;
-
-    using CountersUpgradeable for CountersUpgradeable.Counter;
-    CountersUpgradeable.Counter private _tokenIds;
-
     address public creator;
     string public description;
     bytes12 public communityId;
+    bool public isTradable;
+    bool public isOpenMint;
 
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor(address _trustedForwarder)
@@ -69,7 +70,7 @@ contract MembershipNFTUpgraded is
     }
 
     function initialize(
-        address mercleAddress,
+        address claimIssuer,
         address _creator,
         bytes12 _communityId,
         string memory _name,
@@ -84,11 +85,15 @@ contract MembershipNFTUpgraded is
         __AccessControl_init();
         __UUPSUpgradeable_init();
 
-        _grantRole(DEFAULT_ADMIN_ROLE, _creator);
-        _grantRole(UPGRADER_ROLE, _creator);
-        _grantRole(MINTER_ROLE, _creator);
-        _grantRole(CLAIM_ISSUER_ROLE, _creator);
-        _grantRole(CLAIM_ISSUER_ROLE, mercleAddress);
+        _setupRole(DEFAULT_ADMIN_ROLE, _creator);
+        _setupRole(UPGRADER_ROLE, _creator);
+        _setupRole(MINTER_ROLE, _creator);
+        // allow factory contract to initialize campaign
+        _setupRole(MINTER_ROLE, msg.sender);
+        _setupRole(CLAIM_ISSUER_ROLE, _creator);
+        _setupRole(CLAIM_ISSUER_ROLE, claimIssuer);
+        isTradable = false;
+        isOpenMint = false;
 
         creator = _creator;
         description = _description;
@@ -113,14 +118,10 @@ contract MembershipNFTUpgraded is
         returns (uint256)
     {
         require(
-            hasRole(MINTER_ROLE, _msgSender()),
+            isOpenMint || hasRole(MINTER_ROLE, _msgSender()),
             "DOES_NOT_HAVE_MINTER_ROLE"
         );
         return _mintNFT(recipient, tokenUri);
-    }
-
-    function newFunction() public pure returns (string memory) {
-        return "this is a new function";
     }
 
     function mintNFTCampaign(
@@ -251,6 +252,16 @@ contract MembershipNFTUpgraded is
         return super.tokenURI(tokenId);
     }
 
+    function setIsOpenMint(bool _isOpenMint) public {
+        require(hasRole(DEFAULT_ADMIN_ROLE, _msgSender()), "NOT_AUTHORIZED");
+        isOpenMint = _isOpenMint;
+    }
+
+    function setIsTradable(bool _isTradable) public {
+        require(hasRole(DEFAULT_ADMIN_ROLE, _msgSender()), "NOT_AUTHORIZED");
+        isTradable = _isTradable;
+    }
+
     function _beforeTokenTransfer(
         address from,
         address to,
@@ -258,7 +269,7 @@ contract MembershipNFTUpgraded is
         uint256
     ) internal virtual override {
         require(
-            from == address(0) || to == address(0),
+            isTradable || (from == address(0) || to == address(0)),
             "This a Soulbound token. It cannot be transferred. It can only be burned by the token owner."
         );
     }
@@ -296,5 +307,9 @@ contract MembershipNFTUpgraded is
         returns (bool)
     {
         return super.supportsInterface(interfaceId);
+    }
+
+    function newFunction() public pure returns (string memory) {
+        return "this is a new function";
     }
 }
