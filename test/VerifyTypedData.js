@@ -5,10 +5,9 @@ const profileData = {
   description: "I like to learn new things!",
   image: "ipfs://bafkreibhoidbaunlnybwncrvqktrkzqejowjrqvrjq3xzkp6vnmpoyppdy",
   animation_url: "ipfs://bafkreieufjkfqknfzivoejyvhrzii7m6smdqbv5gls4xshsvnw6pgfrrpq",
-  attributes: [
-    {
-      display_type: "boost_number",
-      trait_type: "XP",
+  properties: {
+    XP: {
+      name: "XP",
       value_type: "XP",
       value: 30,
       claims: {
@@ -93,7 +92,7 @@ const profileData = {
         },
       },
     },
-  ],
+  },
 };
 
 const profileDataAttestedByMercleWithoutMiscClaim = {
@@ -101,10 +100,9 @@ const profileDataAttestedByMercleWithoutMiscClaim = {
   description: "I like to learn new things!",
   image: "ipfs://bafkreibhoidbaunlnybwncrvqktrkzqejowjrqvrjq3xzkp6vnmpoyppdy",
   animation_url: "ipfs://bafkreieufjkfqknfzivoejyvhrzii7m6smdqbv5gls4xshsvnw6pgfrrpq",
-  attributes: [
-    {
-      display_type: "boost_number",
-      trait_type: "XP",
+  properties: {
+    XP: {
+      name: "XP",
       value_type: "XP",
       value: 20,
       claims: {
@@ -134,14 +132,14 @@ const profileDataAttestedByMercleWithoutMiscClaim = {
         },
       },
     },
-  ],
+  },
 };
 
 describe("VerifyTypedSign contract", () => {
   it("Deployment should verify user reward request data", async () => {
     const [owner] = await ethers.getSigners();
 
-    const request = profileData.attributes[0].claims["0x63f72e8458a23ab13b0437ca"].request;
+    const request = profileData.properties.XP.claims["0x63f72e8458a23ab13b0437ca"].request;
 
     const delegateAddress = ethers.utils.verifyTypedData(request.domain, request.types, request.message, request.sign);
     console.log("ethers verification", delegateAddress, request.message.delegate);
@@ -164,7 +162,7 @@ describe("VerifyTypedSign contract", () => {
     const [owner] = await ethers.getSigners();
 
     const request =
-      profileDataAttestedByMercleWithoutMiscClaim.attributes[0].claims["0x63f72e8458a23ab13b0437ca"].attestedByMercle;
+      profileDataAttestedByMercleWithoutMiscClaim.properties.XP.claims["0x63f72e8458a23ab13b0437ca"].attestedByMercle;
 
     const requesterAddress = ethers.utils.verifyTypedData(request.domain, request.types, request.message, request.sign);
     console.log("ethers verification", requesterAddress, request.message.from);
@@ -186,7 +184,7 @@ describe("VerifyTypedSign contract", () => {
   it("Deployment should verify mercle attested claim with miscClaim data", async () => {
     const [owner] = await ethers.getSigners();
 
-    const request = profileData.attributes[0].claims["0x63f72e8458a23ab13b0437ca"].attestedByMercle;
+    const request = profileData.properties.XP.claims["0x63f72e8458a23ab13b0437ca"].attestedByMercle;
 
     const requesterAddress = ethers.utils.verifyTypedData(request.domain, request.types, request.message, request.sign);
     console.log("ethers verification", requesterAddress, request.message.from);
