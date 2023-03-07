@@ -120,6 +120,11 @@ const getSpace = async (spaceId) => {
   return space;
 };
 
+const getFollowing = async () => {
+  await init();
+  return await twitter.v1.friendship({ source_screen_name: "nischitpra", target_screen_name: "RowanRK6" });
+};
+
 const spaceParticipants = async (spaceId) => {
   // await init();
 
@@ -182,4 +187,13 @@ const spaceParticipants = async (spaceId) => {
   return spaceDetails;
 };
 
-module.exports = { loginPassword, loginOauth, oauthCallback, user, spaces, getSpace, spaceParticipants };
+module.exports = {
+  loginPassword,
+  loginOauth,
+  oauthCallback,
+  user,
+  spaces,
+  getSpace,
+  spaceParticipants,
+  getFollowing,
+};

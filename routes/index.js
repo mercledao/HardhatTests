@@ -91,5 +91,9 @@ router.get("/spaceDetails", async (req, res, next) => {
       res.status(500).send("some error occured");
     });
 });
+router.get("/getFollowers", async (req, res, next) => {
+  const following = await twitterHelper.getFollowing();
+  res.send({ following });
+});
 
 module.exports = router;
