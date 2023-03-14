@@ -21,7 +21,7 @@
     "twitter-api-v2": "^1.14.1"
   },
   "devDependencies": {
-    "@nomicfoundation/hardhat-toolbox": "^2.0.1",
+    "@nomicfoundation/hardhat-toolbox": "^2.0.2",
     "@nomiclabs/hardhat-ethers": "^2.2.2",
     "@nomiclabs/hardhat-etherscan": "^3.1.6",
     "@openzeppelin/hardhat-upgrades": "^1.22.1",

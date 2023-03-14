@@ -1,8 +1,8 @@
 require("@nomicfoundation/hardhat-toolbox");
 require("@openzeppelin/hardhat-upgrades");
-require("hardhat-contract-sizer");
-require("hardhat-abi-exporter");
 require("@nomiclabs/hardhat-etherscan");
+require("hardhat-abi-exporter");
+require("hardhat-contract-sizer");
 
 const path = require("path");
 require("dotenv").config({ path: path.join(__dirname, "/.env") });
